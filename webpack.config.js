@@ -3,41 +3,52 @@ let mode = "development";
 let target = "web";
 
 if (process.env.NODE_ENV === "production") {
-    mode = "production";
-    target = "browserslist";
+  mode = "production";
+  target = "browserslist";
 }
 
 module.exports = {
-    mode: mode,
-    target: target,
+  mode: mode,
+  target: target,
 
-    module: {
-        rules: [
-            {
-                test: /\.(s[ac]|c)ss$/i,
-                use: [
-                    MiniCssExtractPlugin.loader, "css-loader", "postcss-loader", "sass-loader"
-                ]
-            },
-            {
-                test: /\.jsx?$/, 
-                exclude: /node_modules/,
-                use: {
-                    loader: "babel-loader"
-                }
-            }
-        ]
-    },
+  output: {
+    assetModuleFilename: "images/[hash][ext][query]",
+  },
 
-    plugins: [new MiniCssExtractPlugin()],
+  module: {
+    rules: [
+      {
+        test: /\.(png|jpe?g|gif|svg)$/i,
+        type: "asset",
+      },
+      {
+        test: /\.(s[ac]|c)ss$/i,
+        use: [
+          { loader: MiniCssExtractPlugin.loader, options: { publicPath: "" } },
+          "css-loader",
+          "postcss-loader",
+          "sass-loader",
+        ],
+      },
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+        },
+      },
+    ],
+  },
 
-    resolve: {
-        extensions: [".js", ".jsx"]
-    },
+  plugins: [new MiniCssExtractPlugin()],
 
-    devtool: "source-map", 
-    devServer: {
-        contentBase: "./dist",
-        hot: true
-    }
-}
+  resolve: {
+    extensions: [".js", ".jsx"],
+  },
+
+  devtool: "source-map",
+  devServer: {
+    contentBase: "./dist",
+    hot: true,
+  },
+};
