@@ -30,19 +30,19 @@ module.exports = {
 
   output: {
     path: path.resolve(__dirname, "dist"),
-    assetModuleFilename: "images/[hash][ext][query]",
+    assetModuleFilename: "images/[path][name][ext][query]?v[contenthash]",
   },
 
   module: {
     rules: [
       {
         test: /\.(png|jpe?g|gif|svg)$/i,
-        type: "asset",
+        type: "asset/resource",
       },
       {
         test: /\.(s[ac]|c)ss$/i,
         use: [
-          { loader: MiniCssExtractPlugin.loader, options: { publicPath: "" } },
+          // { loader: MiniCssExtractPlugin.loader, options: { publicPath: "" } },
           "css-loader",
           "postcss-loader",
           "sass-loader",
@@ -51,9 +51,20 @@ module.exports = {
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
-        },
+        use: [
+          "babel-loader",
+          // {
+          //   loader: path.resolve(__dirname, 'image-hash-loader.js')
+          // }
+        ],
+      },
+      {
+        test: /\.js$/,
+        use: [
+          {
+            loader: path.resolve(__dirname, "image-hash-loader.js"),
+          }
+        ]
       },
     ],
   },
